@@ -100,6 +100,10 @@ def calculate_accuracy(loader, model):
             correct += (predicted == target).sum().item()
     return correct / total
 
+# Function to count parameters
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
 # Training function
 def train(model, device, train_loader, optimizer, epoch):
     model.train()
@@ -167,11 +171,15 @@ def main():
     model = Net().to(device)
     summary(model, input_size=(1, 28, 28))
 
+    # Count and print the number of parameters
+    num_params = count_parameters(model)
+    print(f'Total number of parameters: {num_params}')
+
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
     EPOCHS = 20
     for epoch in range(EPOCHS):
-        print("EPOCH:", epoch)
+        print(f"\nEPOCH: {epoch + 1}/{EPOCHS}")
         train(model, device, train_loader, optimizer, epoch)
         test(model, device, test_loader)
 
